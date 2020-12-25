@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.borderGeofence = exports.password = exports.username = exports.baseUrl = void 0;
 var _a = process.env, SECUREPATH_BASE_URL = _a.SECUREPATH_BASE_URL, SECUREPATH_USERNAME = _a.SECUREPATH_USERNAME, SECUREPATH_PASSWORD = _a.SECUREPATH_PASSWORD;
 if (!SECUREPATH_BASE_URL) {
     throw new Error("TELEGRAM_BOT_TOKEN is required as environment variable.");

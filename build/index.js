@@ -46,7 +46,6 @@ var securepath_api_1 = require("securepath-api");
 var SecurePath_1 = require("./config/SecurePath");
 var Telegram_1 = require("./config/Telegram");
 var bot = new node_telegram_bot_api_1.default(Telegram_1.token);
-bot.sendMessage(Telegram_1.channelId, "TESTING");
 var trackersInsideGeofence = [];
 var checkTrackerInsideGeofence = function (trackerData, coordinates) {
     if (trackerData.latitude && trackerData.longitude) {
@@ -80,7 +79,7 @@ var unmarkTrackerAsNotified = function (trackerToUnmark) {
     }
 };
 var notifyViaTelegram = function (tracker, geofence) {
-    bot.sendMessage(Telegram_1.channelId, tracker.iconText + " is crossing to " + geofence.name);
+    bot.sendMessage(Telegram_1.channelId, "SecurePath vehicle " + tracker.iconText + " is crossing to " + geofence.name);
 };
 var checkForBorderCrossing = function (tracker) {
     SecurePath_1.borderGeofence.forEach(function (geofence) {

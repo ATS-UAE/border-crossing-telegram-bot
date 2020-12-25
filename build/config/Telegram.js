@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.channelId = exports.token = void 0;
 var _a = process.env, TELEGRAM_BOT_TOKEN = _a.TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID = _a.TELEGRAM_CHANNEL_ID;
 if (!TELEGRAM_BOT_TOKEN) {
     throw new Error("TELEGRAM_BOT_TOKEN is required as environment variable.");
