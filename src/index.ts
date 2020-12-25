@@ -72,7 +72,7 @@ const notifyBorderCrossingViaTelegram = (
 ) => {
 	bot.sendMessage(
 		channelId,
-		`SecurePath vehicle ${tracker.iconText} is crossing to ${geofence.name}`
+		`SecurePath vehicle ${tracker.iconText} is crossing ${geofence.name}`
 	);
 };
 
