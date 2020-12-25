@@ -1,0 +1,25 @@
+{
+	"name": "border-crossing-telegram-bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.ts",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"start": "npm run build && node ./build",
+		"format": "prettier --write \"**/*.ts\""
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/node": "^14.14.16",
+		"dotenv": "^8.2.0",
+		"node-telegram-bot-api": "^0.51.0",
+		"securepath-api": "git+https://github.com/ramilamparo/securepath-api.git#v1.0.0",
+		"typescript": "^3.7.3"
+	},
+	"devDependencies": {
+		"@types/node-telegram-bot-api": "^0.50.4",
+		"prettier": "^2.2.1"
+	}
+}
