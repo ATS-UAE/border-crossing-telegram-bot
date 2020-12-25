@@ -66,7 +66,10 @@ const unmarkTrackerAsNotified = (trackerToUnmark: LiveTrackerItem) => {
 	}
 };
 
-const notifyViaTelegram = (tracker: LiveTrackerItem, geofence: Geofence) => {
+const notifyBorderCrossingViaTelegram = (
+	tracker: LiveTrackerItem,
+	geofence: Geofence
+) => {
 	bot.sendMessage(
 		channelId,
 		`SecurePath vehicle ${tracker.iconText} is crossing to ${geofence.name}`
@@ -74,21 +77,24 @@ const notifyViaTelegram = (tracker: LiveTrackerItem, geofence: Geofence) => {
 };
 
 const checkForBorderCrossing = (tracker: LiveTrackerItem) => {
-	borderGeofence.forEach(geofence => {
+	let trackerInsideAnyGeofence = false;
+	for (const geofence of borderGeofence) {
 		const isTrackerInsideGeofence = checkTrackerInsideGeofence(
 			tracker,
 			geofence.coordinates
 		);
 		if (isTrackerInsideGeofence) {
 			const isTrackerAlreadyNotified = checkTrackerAlreadyNotified(tracker);
+			trackerInsideAnyGeofence = true;
 			if (!isTrackerAlreadyNotified) {
-				notifyViaTelegram(tracker, geofence);
+				notifyBorderCrossingViaTelegram(tracker, geofence);
 				markTrackerAsNotified(tracker);
-			} else {
-				unmarkTrackerAsNotified(tracker);
 			}
 		}
-	});
+	}
+	if (!trackerInsideAnyGeofence) {
+		unmarkTrackerAsNotified(tracker);
+	}
 };
 
 const main = async () => {
@@ -99,7 +105,7 @@ const main = async () => {
 		for (const tracker of liveTrackerData) {
 			checkForBorderCrossing(tracker);
 		}
-	}, 5000);
+	}, 10000);
 };
 
 main();
