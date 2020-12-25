@@ -5,15 +5,15 @@ const {
 } = process.env;
 
 if (!SECUREPATH_BASE_URL) {
-	throw new Error("TELEGRAM_BOT_TOKEN is required as environment variable.");
+	throw new Error("SECUREPATH_BASE_URL is required as environment variable.");
 }
 
 if (!SECUREPATH_USERNAME) {
-	throw new Error("TELEGRAM_BOT_TOKEN is required as environment variable.");
+	throw new Error("SECUREPATH_USERNAME is required as environment variable.");
 }
 
 if (!SECUREPATH_PASSWORD) {
-	throw new Error("TELEGRAM_BOT_TOKEN is required as environment variable.");
+	throw new Error("SECUREPATH_PASSWORD is required as environment variable.");
 }
 
 export interface Geofence {
