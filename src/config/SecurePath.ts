@@ -1,6 +1,6 @@
 const {
 	SECUREPATH_BASE_URL,
-	SECUREPATH_USERNAME,
+	SECUREPATH_EMAIL,
 	SECUREPATH_PASSWORD
 } = process.env;
 
@@ -8,8 +8,8 @@ if (!SECUREPATH_BASE_URL) {
 	throw new Error("SECUREPATH_BASE_URL is required as environment variable.");
 }
 
-if (!SECUREPATH_USERNAME) {
-	throw new Error("SECUREPATH_USERNAME is required as environment variable.");
+if (!SECUREPATH_EMAIL) {
+	throw new Error("SECUREPATH_EMAIL is required as environment variable.");
 }
 
 if (!SECUREPATH_PASSWORD) {
@@ -27,7 +27,7 @@ export interface Coordinate {
 }
 
 export const baseUrl = SECUREPATH_BASE_URL;
-export const username = SECUREPATH_USERNAME;
+export const email = SECUREPATH_EMAIL;
 export const password = SECUREPATH_PASSWORD;
 export const borderGeofence: Geofence[] = [
 	{

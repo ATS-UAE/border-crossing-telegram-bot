@@ -1,26 +1,34 @@
-import SecurePath, { LiveTrackerItem } from "securepath-api";
+import SecurePath, { Vehicle } from "securepath-api-2";
 import {
 	borderGeofence,
 	Coordinate,
 	Geofence,
 	baseUrl,
-	username,
+	email,
 	password
 } from "../config/SecurePath";
 import { Logger } from "./Logger";
 import { ScheduledJob } from "./ScheduledJob";
 import { Telegram } from "./Telegram";
 
+export interface SecurePathTracker {
+	trackerId: string;
+	latitude: number | null;
+	longitude: number | null;
+	plateNumber: string | null;
+	chassisNumber: string;
+}
+
 export class SecurePathBorder {
 	private telegram: Telegram;
-	private notifiedTrackers: LiveTrackerItem[] = [];
+	private notifiedTrackers: SecurePathTracker[] = [];
 
 	private constructor(private session: SecurePath) {
 		this.telegram = Telegram.create();
 	}
 
 	private checkTrackerInsideGeofence = (
-		trackerData: LiveTrackerItem,
+		trackerData: SecurePathTracker,
 		coordinates: Coordinate[]
 	) => {
 		if (trackerData.latitude && trackerData.longitude) {
@@ -48,13 +56,13 @@ export class SecurePathBorder {
 		return false;
 	};
 
-	private checkTrackerAlreadyNotified = (trackerToCheck: LiveTrackerItem) => {
+	private checkTrackerAlreadyNotified = (trackerToCheck: SecurePathTracker) => {
 		return this.notifiedTrackers.some(
 			tracker => tracker.trackerId === trackerToCheck.trackerId
 		);
 	};
 
-	private markTrackerAsNotified = (trackerToMark: LiveTrackerItem) => {
+	private markTrackerAsNotified = (trackerToMark: SecurePathTracker) => {
 		const isTrackerAlreadyNotified = this.checkTrackerAlreadyNotified(
 			trackerToMark
 		);
@@ -63,7 +71,7 @@ export class SecurePathBorder {
 		}
 	};
 
-	private unmarkTrackerAsNotified = (trackerToUnmark: LiveTrackerItem) => {
+	private unmarkTrackerAsNotified = (trackerToUnmark: SecurePathTracker) => {
 		const notifiedTrackerIndex = this.notifiedTrackers.findIndex(
 			tracker => tracker.trackerId === trackerToUnmark.trackerId
 		);
@@ -73,15 +81,17 @@ export class SecurePathBorder {
 	};
 
 	private notifyBorderCrossingViaTelegram = (
-		tracker: LiveTrackerItem,
+		tracker: SecurePathTracker,
 		geofence: Geofence
 	) => {
-		const message = `SecurePath vehicle ${tracker.iconText} is crossing ${geofence.name}`;
+		const message = `SecurePath vehicle ${
+			tracker.plateNumber || tracker.chassisNumber
+		} is crossing ${geofence.name}`;
 		Logger.log(message);
 		this.telegram.sendMessage(message);
 	};
 
-	public checkForBorderCrossing = (tracker: LiveTrackerItem) => {
+	public checkForBorderCrossing = (tracker: SecurePathTracker) => {
 		let trackerInsideAnyGeofence = false;
 		for (const geofence of borderGeofence) {
 			const isTrackerInsideGeofence = this.checkTrackerInsideGeofence(
@@ -105,8 +115,21 @@ export class SecurePathBorder {
 		return trackerInsideAnyGeofence;
 	};
 
-	public getAllTrackers = () => {
-		return this.session.Live.getTrackers();
+	public getAllTrackers = async (): Promise<SecurePathTracker[]> => {
+		const organizations = await this.session.getOrganizations();
+		const allVehicles: Vehicle[] = [];
+		for (let orgIndex = 0; orgIndex < organizations.length; orgIndex++) {
+			const organization = organizations[orgIndex];
+			const vehicles = await organization.getVehicles(true);
+			allVehicles.push(...vehicles);
+		}
+		return allVehicles.map(vehicle => ({
+			chassisNumber: vehicle.chassisNumber,
+			latitude: vehicle.latitude,
+			longitude: vehicle.longitude,
+			plateNumber: vehicle.plateNumber,
+			trackerId: vehicle.trackerId
+		}));
 	};
 
 	public checkBorders = async () => {
@@ -118,7 +141,15 @@ export class SecurePathBorder {
 	};
 
 	public static startScheduledBorderCheck = async (interval: number = 5) => {
-		const session = await SecurePath.login(username, password, { baseUrl });
+		const session = await SecurePath.login(
+			{
+				email,
+				password
+			},
+			{
+				baseUrl
+			}
+		);
 		const securePath = new SecurePathBorder(session);
 		const jobScheduler = new ScheduledJob(
 			async () => {

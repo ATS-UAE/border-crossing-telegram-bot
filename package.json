@@ -17,8 +17,8 @@
 		"@types/node": "^14.14.16",
 		"dotenv": "^8.2.0",
 		"node-telegram-bot-api": "^0.51.0",
-		"securepath-api": "git+https://github.com/ramilamparo/securepath-api.git#v1.0.0",
-		"typescript": "^3.7.3"
+		"securepath-api-2": "git+https://github.com/ramilamparo/securepath-api-2.git#v0.0.4",
+		"typescript": "^3.8.0"
 	},
 	"devDependencies": {
 		"@types/node-telegram-bot-api": "^0.50.4",
