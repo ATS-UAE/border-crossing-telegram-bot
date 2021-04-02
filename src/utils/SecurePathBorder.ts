@@ -154,7 +154,9 @@ export class SecurePathBorder {
 		const jobScheduler = new ScheduledJob(
 			async () => {
 				Logger.log("Checking borders");
-				await securePath.checkBorders();
+				await securePath.checkBorders().catch(e => {
+					Logger.log(e);
+				});
 			},
 			{ interval }
 		);
