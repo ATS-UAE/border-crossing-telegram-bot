@@ -8,6 +8,7 @@ export interface JobFunction {
 export interface ScheduledJobOptions {
 	/** In seconds */
 	interval: number;
+	waitFinish?: boolean;
 }
 
 export class ScheduledJob {
@@ -25,7 +26,10 @@ export class ScheduledJob {
 	};
 
 	private checkPreviousJobStillExecuting = () => {
-		return !this.isLastExecutionDone;
+		if (this.options.waitFinish) {
+			return !this.isLastExecutionDone;
+		}
+		return false;
 	};
 
 	private executeJob = async () => {
