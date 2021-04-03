@@ -155,7 +155,7 @@ export class SecurePathBorder {
 			async () => {
 				Logger.log("Checking borders");
 				await securePath.checkBorders().catch(e => {
-					Logger.log(e);
+					Logger.error(e);
 				});
 			},
 			{ interval }

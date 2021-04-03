@@ -6,4 +6,9 @@ export class Logger {
 			console.log(...message);
 		}
 	};
+	public static error = (...message: any) => {
+		if (shouldLog) {
+			console.error(...message);
+		}
+	};
 }

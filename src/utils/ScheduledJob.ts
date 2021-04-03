@@ -1,3 +1,5 @@
+import { Logger } from "./Logger";
+
 export interface JobFunction {
 	(): Promise<void>;
 	(): void;
@@ -28,7 +30,7 @@ export class ScheduledJob {
 
 	private executeJob = async () => {
 		this.isLastExecutionDone = false;
-		await this.job();
+		await this.job().catch(Logger.error);
 		this.timeSinceLastJobExecution = this.secondsSinceStart;
 		this.isLastExecutionDone = true;
 	};
