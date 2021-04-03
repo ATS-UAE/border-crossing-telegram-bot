@@ -10,6 +10,7 @@ import {
 import { Logger } from "./Logger";
 import { ScheduledJob } from "./ScheduledJob";
 import { Telegram } from "./Telegram";
+import { TimeOutPromise } from "./TimeOutPromise";
 
 export interface SecurePathTracker {
 	trackerId: string;
@@ -154,11 +155,13 @@ export class SecurePathBorder {
 		const jobScheduler = new ScheduledJob(
 			async () => {
 				Logger.log("Checking borders");
-				await securePath.checkBorders().catch(e => {
-					Logger.error(e);
-				});
+				TimeOutPromise.useTimeout(async () => {
+					await securePath.checkBorders().catch(e => {
+						Logger.error(e);
+					});
+				}, 10);
 			},
-			{ interval }
+			{ interval, waitFinish: true }
 		);
 		Logger.log(`Starting schedule job every ${5} seconds.`);
 		jobScheduler.start();
