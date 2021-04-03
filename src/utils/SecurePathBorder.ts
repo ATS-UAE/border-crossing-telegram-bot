@@ -156,10 +156,10 @@ export class SecurePathBorder {
 			async () => {
 				Logger.log("Checking borders");
 				TimeOutPromise.useTimeout(async () => {
-					await securePath.checkBorders().catch(e => {
-						Logger.error(e);
-					});
-				}, 10);
+					await securePath.checkBorders();
+				}, 10).catch(e => {
+					Logger.error(e);
+				});
 			},
 			{ interval, waitFinish: true }
 		);
